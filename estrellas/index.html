@@ -1,0 +1,542 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Las estrellas también son datos — StarsCode</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600;1,700&family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@1,700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #000000;
+    --bg-2: #0d0128;
+    --purple-50: #f6f1ff;
+    --purple-100: #e9dcff;
+    --purple-200: #d4baff;
+    --purple-300: #b48cff;
+    --purple-400: #9461f0;
+    --purple-500: #7a3dd9;
+    --purple-600: #5f29b3;
+    --purple-700: #451e85;
+    --purple-800: #2e145c;
+    --purple-900: #1a0a3a;
+    --ink: #ffffff;
+    --ink-soft: rgba(220, 210, 255, 0.85);
+    --card: rgba(20, 8, 55, 0.9);
+    --card-soft: rgba(30, 10, 70, 0.8);
+    --shadow: 0 12px 32px rgba(69,30,133,.10), 0 2px 6px rgba(69,30,133,.06);
+    --radius: 22px;
+    --radius-sm: 14px;
+    --max: 1280px;
+    --font-title: 'Playfair Display', serif;
+    --font-heading: 'Cormorant Garamond', serif;
+    --font-body: 'Inter', sans-serif;
+  }
+
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    font-family: var(--font-body);
+    color: var(--ink);
+    background: #000000;
+    -webkit-font-smoothing: antialiased;
+    line-height: 1.45;
+  }
+  .wrap{max-width:var(--max); margin:0 auto; padding: 0 32px;}
+  section{padding: 96px 0;}
+
+  /* NAVBAR */
+  #navbar {
+    position: sticky; top: 0; z-index: 200;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 4px 40px;
+    background: rgba(2, 1, 8, 0.98);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(80, 50, 180, 0.2);
+  }
+  #navbar .logo { height: 70px; width: auto; object-fit: contain; }
+  #navbar nav ul {
+    display: flex; align-items: center;
+    gap: 28px; list-style: none; margin: 0; padding: 0;
+  }
+  #navbar nav ul li {
+    cursor: pointer; font-size: 13px;
+    color: rgba(220, 210, 255, 0.85);
+    font-family: var(--font-body);
+    display: flex; align-items: center; gap: 4px;
+    transition: opacity 0.2s; font-style: italic;
+  }
+  #navbar nav ul li a { color: inherit; text-decoration: none; font-style: inherit; font-size: inherit; font-family: inherit; }
+  #navbar nav ul li:hover { opacity: 0.6; }
+  .nav-chevron { font-size: 11px; color: #a87fff; }
+  .nav-left { flex: 1; display: flex; align-items: center; }
+  .nav-right { flex: 1; display: flex; align-items: center; gap: 12px; justify-content: flex-end; }
+  .btn-back {
+    background: transparent; color: rgba(220, 210, 255, 0.85);
+    border: 1px solid rgba(140, 100, 255, 0.4);
+    border-radius: 9999px; padding: 8px 18px;
+    cursor: pointer; font-size: 13px;
+    font-family: var(--font-body); font-style: italic;
+    transition: all 0.2s;
+  }
+  .btn-back:hover {
+    border-color: rgba(160, 100, 255, 0.7);
+    background: rgba(100, 60, 200, 0.2);
+    color: #fff;
+  }
+
+  /* HERO */
+  .hero {
+    background: #000000;
+    padding: 80px 0 140px;
+    overflow: hidden;
+    position: relative;
+  }
+  .hero h1{
+    font-family: var(--font-title);
+    font-size: clamp(42px, 5.2vw, 78px);
+    font-weight: 700; font-style: italic;
+    letter-spacing: -0.02em; text-align: center;
+    color: var(--ink); margin: 0 0 22px; line-height: 1.05;
+  }
+  .hero .lead{
+    max-width: 720px; margin: 0 auto 60px;
+    text-align: center; font-size: 18px;
+    color: var(--ink-soft); font-family: var(--font-body);
+  }
+  .hero-stage{
+    position: relative; height: 520px;
+    max-width: 1100px; margin: 0 auto;
+  }
+  .hero-orb {
+    position: absolute; inset: 0; margin: auto;
+    width: 560px; height: 560px;
+    border-radius: 50%; overflow: hidden;
+    animation: float 9s ease-in-out infinite;
+  }
+  .hero-orb::after { display: none; }
+  @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-14px)}}
+  .float-card{ position: absolute; max-width: 360px; background: transparent; box-shadow: none; padding: 0; }
+  .float-card.left { left: 0; bottom: 30px; }
+  .float-card.right { right: 0; top: 110px; }
+  .float-thumb { display: none; }
+  .float-icon { display: none; }
+  .float-card p { margin: 0; font-size: 15px; color: #ffffff; line-height: 1.4; font-family: var(--font-body); }
+
+  /* SOL */
+  .sol { background: #000000; }
+  .sol-grid { display: grid; grid-template-columns: 1.1fr 1.6fr; gap: 60px; align-items: start; }
+  .sol-grid h2 {
+    font-family: var(--font-heading);
+    font-size: clamp(36px, 4vw, 56px);
+    font-weight: 700; font-style: italic;
+    letter-spacing: -0.01em; line-height: 1.05;
+    margin: 8px 0 28px; color: #ffffff;
+  }
+  .sol-grid p.lead-2 { font-size: 17px; color: rgba(220, 210, 255, 0.85); margin: 0; max-width: 56ch; font-family: var(--font-body); }
+  .sol-stage { display: grid; grid-template-columns: 1fr 1.1fr 1fr; gap: 40px; align-items: center; margin-top: 60px; }
+  .bullet { display: flex; flex-direction: column; gap: 14px; color: rgba(220, 210, 255, 0.85); font-size: 17px; line-height: 1.45; font-family: var(--font-body); }
+  .bullet .ico { display: none; }
+  .col-left { display: flex; flex-direction: column; gap: 48px; text-align: right; align-items: flex-end; }
+  .col-right { display: flex; flex-direction: column; gap: 48px; }
+  .col-left .bullet { align-items: flex-end; }
+  .star-photo { border-radius: 0; overflow: visible; box-shadow: none; background: none; display: flex; align-items: center; justify-content: center; }
+  .star-photo img { width: 120%; height: auto; object-fit: contain; border-radius: 0; }
+  .star-photo::before { display: none; }
+  .star-photo::after { display: none; }
+
+  /* TIPOS */
+  .tipos { background: #000000; }
+  .tipos h2 { color: #ffffff; }
+  .tipos-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center; }
+  .swirl { position: relative; aspect-ratio: 1/1; max-width: 520px; margin: 0 auto; overflow: hidden; border-radius: 50%; }
+  #swirl-3 { border-radius: 0; }
+  .swirl .core {
+    position: absolute; inset: 34%; border-radius: 18px;
+    background: linear-gradient(135deg, #9461f0, #5f29b3);
+    box-shadow: 0 20px 40px rgba(60,20,130,.4), inset 0 0 30px rgba(255,255,255,.2);
+    display: grid; place-items: center;
+    color: #fff; font-weight: 700; font-size: 38px;
+  }
+  .swirl .pill {
+    position: absolute; width: 16%; height: 5%;
+    border-radius: 999px;
+    background: linear-gradient(90deg, #c9a6ff, #6b2cc9);
+    top: 50%; left: 50%; transform-origin: 0 50%;
+    box-shadow: 0 4px 10px rgba(50,10,100,.25);
+  }
+  .tipos-card { background: #111; border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; }
+.tipos-card .img { position: relative; overflow: hidden; aspect-ratio: unset; height: auto; }
+.tipos-card .img img { width: 100%; height: auto; object-fit: contain; display: block; }
+.tipos-card .img::after { display: none; }
+.tipos-card p { margin: 0; padding: 22px 26px 28px; color: rgba(220, 210, 255, 0.85); font-size: 16px; font-family: var(--font-body); }
+
+  /* HR HEADER */
+  .hr-head { background: #000000; color: #fff; padding: 80px 0; }
+  .hr-head .wrap { display: grid; grid-template-columns: 1fr 1.2fr; gap: 60px; align-items: center; }
+  .hr-head h2 {
+    font-family: var(--font-heading);
+    font-size: clamp(36px, 4vw, 58px);
+    font-weight: 700; font-style: italic;
+    letter-spacing: -0.01em; line-height: 1.05; margin: 0; text-align: right;
+  }
+  .hr-head p {
+    color: rgba(220, 210, 255, 0.85); font-size: 17px; line-height: 1.55; font-family: var(--font-body);
+    background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.12);
+    padding: 22px 26px; border-radius: var(--radius-sm); backdrop-filter: blur(4px);
+  }
+
+  /* COLOR / ARCO */
+  .color-rel { background: #e8e0f7; padding: 120px 0 140px; overflow: hidden; }
+  .star-arc { position: relative; width: 100%; height: 380px; margin-bottom: 70px; overflow: hidden; border-radius: 16px; }
+  .star-arc img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .color-text { max-width: 920px; }
+  .color-text h2 {
+    font-family: var(--font-heading);
+    font-size: clamp(34px, 3.6vw, 56px);
+    font-weight: 700; font-style: italic;
+    letter-spacing: -0.01em; line-height: 1.1; margin: 0 0 28px; color: #000000;
+  }
+  .color-text p { color: #000000; font-size: 18px; line-height: 1.55; margin: 0; max-width: 70ch; font-family: var(--font-body); }
+
+  /* OBAFGKM */
+  .obafgkm-scroll { background: #e8e0f7; color: #000000; position: relative; height: calc(100vh + 8 * 80vh); }
+  .obafgkm-sticky {
+    position: sticky; top: 0; height: 100vh; overflow: hidden;
+    display: flex; flex-direction: column; justify-content: center;
+    padding: 60px 0 40px; box-sizing: border-box;
+  }
+  .mnem-title { text-align: center; color: #2e145c; font-family: var(--font-body); font-size: 13px; letter-spacing: .18em; text-transform: uppercase; margin: 0 0 8px; opacity: .8; }
+  .mnem { text-align: center; font-family: var(--font-heading); font-size: clamp(24px, 2.8vw, 38px); margin: 0 0 36px; font-weight: 600; font-style: italic; letter-spacing: .02em; color: #1a0a3a; }
+  .mnem b { color: #5f29b3; font-weight: 700; }
+  .stack-row { display: flex; gap: 14px; width: calc(100% - 96px); max-width: 1320px; margin: 0 auto; height: 66vh; align-items: stretch; justify-content: center; }
+  .scard {
+    flex: 0 0 0; flex-basis: 0; height: 100%;
+    border-radius: 28px; overflow: hidden; position: relative;
+    transform: translateY(60px); opacity: 0;
+    transition: flex-basis .85s cubic-bezier(.22,.61,.36,1), transform .8s cubic-bezier(.22,.61,.36,1), opacity .5s ease;
+    will-change: flex-basis,transform,opacity;
+    box-shadow: 0 24px 60px rgba(0,0,0,.25);
+  }
+  .scard[data-state="active"]{ flex-basis: clamp(420px,38vw,620px); transform: translateY(0); opacity: 1; }
+  .scard[data-state="collapsed"]{ flex-basis: 96px; transform: translateY(0); opacity: 1; }
+  .scard .scard-inner { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: space-between; padding: 48px 52px; gap: 24px; }
+  .scard .dots { display: flex; gap: 8px; }
+  .scard .dot { width: 11px; height: 11px; border-radius: 50%; background: currentColor; opacity: .85; }
+  .scard .desc { font-family: var(--font-body); font-size: clamp(17px,1.4vw,24px); line-height: 1.55; margin: 0 auto; max-width: 28ch; text-align: left; align-self: center; }
+  .scard .label-bottom { font-family: var(--font-heading); font-size: clamp(22px,2vw,30px); font-weight: 700; font-style: italic; letter-spacing: .02em; margin: 0; }
+  .scard .vlabel { position: absolute; left: 0; right: 0; bottom: 24px; text-align: center; font-family: var(--font-heading); font-size: 15px; letter-spacing: .18em; text-transform: uppercase; font-weight: 700; font-style: italic; opacity: 0; transition: opacity .4s ease; pointer-events: none; }
+  .scard[data-state="collapsed"] .vlabel { opacity: .9; }
+  .scard[data-state="collapsed"] .scard-inner { opacity: 0; transition: opacity .3s ease; }
+  .scard[data-state="active"] .scard-inner { opacity: 1; transition: opacity .5s ease .15s; }
+  .scard[data-state="hidden"] .scard-inner { opacity: 0; }
+  .t-O{background:linear-gradient(160deg,#9BB8FF 0%,#7e9eef 100%);color:#1a2b66;}
+  .t-B{background:linear-gradient(160deg,#B8D4FF 0%,#9cc0ff 100%);color:#1a2b66;}
+  .t-A{background:linear-gradient(160deg,#EAF2FF 0%,#d6e6ff 100%);color:#2a3a66;}
+  .t-F{background:linear-gradient(160deg,#FFF4C7 0%,#ffe79a 100%);color:#6b4a00;}
+  .t-G{background:linear-gradient(160deg,#FFE89A 0%,#ffd66a 100%);color:#6b4a00;}
+  .t-K{background:linear-gradient(160deg,#FFD0A3 0%,#ffb878 100%);color:#6b3a00;}
+  .t-M{background:linear-gradient(160deg,#FFB3A7 0%,#ff8e7d 100%);color:#6b1a10;}
+  .progress-track { width: calc(100% - 96px); max-width: 1320px; margin: 28px auto 0; height: 4px; background: rgba(0,0,0,.12); border-radius: 999px; overflow: hidden; }
+  .progress-fill { height: 100%; background: linear-gradient(90deg,#5f29b3,#2e145c); width: 0%; border-radius: 999px; transition: width .25s ease; }
+
+  /* ANNIE */
+  .annie { background: #000000; }
+  .annie-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center; }
+  .annie h2 { font-family: var(--font-heading); font-size: clamp(36px,4vw,58px); font-weight: 700; font-style: italic; letter-spacing: -0.01em; line-height: 1.05; margin: 0 0 28px; color: #ffffff; }
+  .annie-card { background: #111; border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; }
+  .annie-card .img { aspect-ratio: 16/10; position: relative; overflow: hidden; }
+  .annie-card .img img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .annie-card .img::after { display: none; }
+  .annie-card p { margin: 0; padding: 22px 26px 30px; color: rgba(220, 210, 255, 0.85); font-size: 16px; line-height: 1.55; font-family: var(--font-body); }
+
+  /* RELACIÓN HR */
+  .relhr { background: #000000; }
+  .relhr-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center; }
+  .relhr h2 { font-family: var(--font-heading); font-size: clamp(36px,4vw,58px); font-weight: 700; font-style: italic; letter-spacing: -0.01em; line-height: 1.05; margin: 0 0 28px; color: #ffffff; }
+  .relhr-card { background: #111; border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; }
+  .relhr-card .img { aspect-ratio: 16/10; position: relative; overflow: hidden; }
+  .relhr-card .img img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .relhr-card .img::after { display: none; }
+  .relhr-card p { margin: 0; padding: 22px 26px 30px; color: rgba(220, 210, 255, 0.85); font-size: 16px; line-height: 1.55; font-family: var(--font-body); }
+
+  /* CTA */
+  .cta { background: #000000; padding: 140px 0 160px; text-align: center; }
+  .cta h2 { font-family: var(--font-title); font-size: clamp(40px,5vw,80px); font-weight: 700; font-style: italic; letter-spacing: -0.02em; line-height: 1.08; margin: 0 auto 50px; max-width: 16ch; color: #ffffff; }
+  .cta a { display: inline-block; background: var(--purple-700); color: #fff; text-decoration: none; padding: 22px 42px; border-radius: 999px; font-size: 14px; letter-spacing: .16em; text-transform: uppercase; font-weight: 600; font-family: var(--font-body); box-shadow: 0 14px 30px rgba(69,30,133,.35); transition: transform .2s ease,background .2s ease; }
+  .cta a:hover { background: var(--purple-800); transform: translateY(-2px); }
+
+  /* RESPONSIVE */
+  @media(max-width:880px){
+    .sol-grid,.tipos-grid,.annie-grid,.relhr-grid,.hr-head .wrap{grid-template-columns:1fr;}
+    .hero-stage{height:700px;}
+    .float-card.left{left:0;bottom:0;}
+    .float-card.right{right:0;top:0;}
+    .hero-orb{width:380px;height:380px;}
+    .sol-stage{grid-template-columns:1fr;gap:28px;}
+    .col-left{text-align:left;align-items:flex-start;}
+    .col-left .bullet{align-items:flex-start;}
+    .hr-head h2{text-align:left;}
+    .stack-row{width:calc(100% - 32px);height:70vh;}
+    .scard .scard-inner{padding:24px 26px;}
+    .scard[data-state="active"]{flex-basis:75vw;}
+    .scard[data-state="collapsed"]{flex-basis:56px;}
+    #navbar{padding:4px 20px;}
+    #navbar nav ul{gap:14px;}
+  }
+</style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<div id="navbar">
+  <div class="nav-left">
+    <img class="logo" src="../inicio/logo.png" alt="StarsCode" onerror="this.style.display='none'">
+  </div>
+  <nav>
+    <ul>
+      <li><a href="../que-es/index.html">Qué es StarsCode <span class="nav-chevron">›</span></a></li>
+      <li><a href="../estrellas/index.html">Estrellas <span class="nav-chevron">›</span></a></li>
+      
+    </ul>
+  </nav>
+  <div class="nav-right">
+    <button class="btn-back" onclick="window.location.href='../inicio/index.html'">← Volver al inicio</button>
+  </div>
+</div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="wrap">
+    <h1>Las estrellas también son datos</h1>
+    <p class="lead">Cada estrella que observamos en el cielo contiene información que puede ser medida, organizada y analizada. Su color, brillo, temperatura, distancia y posición permiten estudiar cómo nacen, evolucionan y cambian a lo largo del tiempo.</p>
+    <div class="hero-stage">
+      <img src="sungif.gif" alt="Sol" class="hero-orb" style="object-fit:cover;">
+      <div class="float-card left">
+        <p>Las estrellas brillan porque generan energía mediante fusión nuclear.</p>
+      </div>
+      <div class="float-card right">
+        <p>Su color cambia según su temperatura: azul, blanca, amarilla, naranja o roja.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- NUESTRA ESTRELLA: EL SOL -->
+<section class="sol">
+  <div class="wrap">
+    <div class="sol-grid">
+      <h2>Nuestra estrella:<br/>El Sol</h2>
+      <p class="lead-2">El Sol es la estrella más cercana a la Tierra y la que permite la vida en nuestro planeta. Aunque lo vemos mucho más grande y brillante que las demás estrellas, esto ocurre porque está muy cerca de nosotros. En realidad, el Sol es una estrella común dentro de nuestra galaxia.</p>
+    </div>
+    <div class="sol-stage">
+      <div class="col-left">
+        <div class="bullet">
+          <span>El Sol está formado principalmente por hidrógeno y helio, los elementos más abundantes en su interior.</span>
+        </div>
+        <div class="bullet">
+          <span>Tiene distintas regiones, como el núcleo, la zona radiativa, la zona convectiva y la atmósfera solar.</span>
+        </div>
+      </div>
+      <div class="star-photo">
+        <img src="sungif.gif" alt="El Sol">
+      </div>
+      <div class="col-right">
+        <div class="bullet">
+          <span>En su superficie ocurren manchas solares, llamaradas y eyecciones de material que pueden afectar el entorno espacial.</span>
+        </div>
+        <div class="bullet">
+          <span>La energía producida en el interior del Sol tarda mucho tiempo en salir y luego llega a la Tierra en pocos minutos.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TIPOS DE ESTRELLAS -->
+<section class="tipos">
+  <div class="wrap">
+    <div class="tipos-grid">
+      <div class="swirl" id="swirl">
+        <img src="jaujua.jpg" alt="Tipos de estrellas" style="width:100%;height:100%;object-fit:cover;">
+      </div>
+      <div>
+        <h2>Hay muchos tipos<br/>de estrellas</h2>
+        <div class="tipos-card">
+          <div class="img">
+            <img src="tipos.png" alt="Tipos de estrellas">
+          </div>
+          <p>Las estrellas pueden diferenciarse por su color, temperatura, tamaño y brillo. Algunas son más calientes, otras más frías, y cada una entrega información distinta sobre su composición y evolución.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HEADER HR -->
+<section class="hr-head">
+  <div class="wrap">
+    <p>El Diagrama Hertzsprung-Russell, también conocido como Diagrama HR, es una de las herramientas más importantes para estudiar estrellas. Permite organizar y comparar distintos tipos de estrellas según dos propiedades principales: su temperatura y su luminosidad.</p>
+    <h2>Diagrama<br/>Hertzsprung-Russell</h2>
+  </div>
+</section>
+
+<!-- COLOR / TEMPERATURA -->
+<section class="color-rel">
+  <div class="wrap">
+    <div class="star-arc">
+      <img src="estresi.png" alt="">
+    </div>
+    <div class="color-text">
+      <h2>El color de una estrella está directamente relacionado con su temperatura superficial.</h2>
+      <p>Las estrellas azules son las más calientes; luego vienen las blancas, amarillas y naranjas. Las estrellas rojas son las más frías. Por eso, observar su color permite conocer una parte importante de su naturaleza física.</p>
+    </div>
+  </div>
+</section>
+
+<!-- OBAFGKM SCROLL STACK -->
+<section class="obafgkm-scroll" id="obafgkm">
+  <div class="obafgkm-sticky">
+    <p class="mnem-title">Mnemotecnia</p>
+    <p class="mnem"><b>O</b>h <b>B</b>e <b>A</b> <b>F</b>ine <b>G</b>irl, <b>K</b>iss <b>M</b>e</p>
+    <div class="stack-row" id="stackRow">
+      <article class="scard t-O" data-state="hidden">
+        <div class="vlabel">O · Oh</div>
+        <div class="scard-inner">
+          <div class="dots"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
+          <p class="desc">Tipo O: Son las estrellas más calientes de la secuencia. Tienen color azul o azul-violeta y emiten una gran cantidad de energía. Son muy masivas, luminosas y poco comunes; su vida es corta porque consumen su combustible muy rápido.</p>
+          <p class="label-bottom">O · Oh</p>
+        </div>
+      </article>
+      <article class="scard t-B" data-state="hidden">
+        <div class="vlabel">B · Be</div>
+        <div class="scard-inner">
+          <div class="dots"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
+          <p class="desc">Tipo B: Son estrellas azuladas y muy calientes, aunque menos extremas que las de tipo O. También son luminosas y masivas. Muchas estrellas jóvenes y brillantes pertenecen a este grupo.</p>
+          <p class="label-bottom">B · Be</p>
+        </div>
+      </article>
+      <article class="scard t-A" data-state="hidden">
+        <div class="vlabel">A</div>
+        <div class="scard-inner">
+          <div class="dots"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
+          <p class="desc">Tipo A: Son estrellas blancas o blanco-azuladas. Tienen temperaturas altas y suelen mostrar líneas de hidrógeno muy marcadas en su espectro, lo que permite estudiar con claridad la composición de la luz estelar.</p>
+          <p class="label-bottom">A</p>
+        </div>
+      </article>
+      <article class="scard t-F" data-state="hidden">
+        <div class="vlabel">F · Fine</div>
+        <div class="scard-inner">
+          <div class="dots"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
+          <p class="desc">Tipo F: Son estrellas blanco-amarillentas. Tienen temperaturas intermedias-altas y pueden ser más calientes y luminosas que el Sol. Su color comienza a acercarse a tonos más cálidos.</p>
+          <p class="label-bottom">F · Fine</p>
+        </div>
+      </article>
+      <article class="scard t-G" data-state="hidden">
+        <div class="vlabel">G · Girl</div>
+        <div class="scard-inner">
+          <div class="dots"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
+          <p class="desc">Tipo G: Son estrellas amarillas o blanco-amarillentas. El Sol pertenece a este tipo. Tienen temperaturas intermedias y se mantienen estables durante largos periodos de tiempo, produciendo energía en su interior.</p>
+          <p class="label-bottom">G · Girl</p>
+        </div>
+      </article>
+      <article class="scard t-K" data-state="hidden">
+        <div class="vlabel">K · Kiss</div>
+        <div class="scard-inner">
+          <div class="dots"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
+          <p class="desc">Tipo K: Son estrellas anaranjadas, más frías que el Sol. Suelen tener una vida más larga que las estrellas más calientes, porque consumen su combustible de forma más lenta.</p>
+          <p class="label-bottom">K · Kiss</p>
+        </div>
+      </article>
+      <article class="scard t-M" data-state="hidden">
+        <div class="vlabel">M · Me</div>
+        <div class="scard-inner">
+          <div class="dots"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
+          <p class="desc">Tipo M: Son estrellas rojas y las más frías de esta clasificación. Son muy abundantes en la galaxia y muchas corresponden a enanas rojas; aunque emiten menos luz visible, pueden vivir durante tiempos extremadamente largos.</p>
+          <p class="label-bottom">M · Me</p>
+        </div>
+      </article>
+    </div>
+    <div class="progress-track"><div class="progress-fill" id="obafProg"></div></div>
+  </div>
+</section>
+
+<!-- ANNIE JUMP CANNON -->
+<section class="annie">
+  <div class="wrap">
+    <div class="annie-grid">
+      <div class="swirl" id="swirl-2">
+        <img src="AJumpCannon.jpg" alt="Annie Jump Cannon" style="width:100%;height:100%;object-fit:cover;">
+      </div>
+      <div>
+        <h2>¿Quién creó esta clasificación?</h2>
+        <div class="annie-card">
+          <div class="img">
+            <img src="a2.jpg" alt="Annie Jump Cannon">
+          </div>
+          <p>La clasificación espectral moderna O, B, A, F, G, K, M fue organizada por la astrónoma Annie Jump Cannon, quien trabajó en el Observatorio de Harvard a comienzos del siglo XX. Su trabajo permitió ordenar cientos de miles de estrellas según las características de su luz y su temperatura.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- RELACIÓN HR -->
+<section class="relhr">
+  <div class="wrap">
+    <div class="relhr-grid">
+      <div>
+        <h2>Relación con el Diagrama Hertzsprung-Russell</h2>
+        <div class="relhr-card">
+          <div class="img">
+            <img src="estrellaazul.jpg" alt="Diagrama HR">
+          </div>
+          <p>Esta clasificación se usa en el Diagrama Hertzsprung-Russell porque permite ordenar las estrellas según su temperatura y color. En el diagrama, las estrellas más calientes, como las de tipo O y B, se ubican hacia un extremo, mientras que las más frías, como las de tipo K y M, se ubican hacia el otro.<br/><br/>De esta forma, la clasificación OBAFGKM ayuda a interpretar la posición de cada estrella dentro del Diagrama Hertzsprung-Russell y a comprender mejor su luminosidad, temperatura y etapa evolutiva.</p>
+        </div>
+      </div>
+      <div class="swirl" id="swirl-3">
+        <img src="HR.jpg" alt="" style="width:100%;height:100%;object-fit:cover;">
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta">
+  <div class="wrap">
+    <h2>Revisa nuestros módulos y crea tu propio Diagrama Hertzsprung-Russell</h2>
+    <a href="../inicio/index.html">Revisar módulos</a>
+  </div>
+</section>
+
+<script>
+  (function(){
+    const section = document.getElementById('obafgkm');
+    const cards = section ? section.querySelectorAll('.scard') : [];
+    const progFill = document.getElementById('obafProg');
+    if(!section||!cards.length) return;
+    const N = cards.length;
+    function update(){
+      const rect = section.getBoundingClientRect();
+      const total = section.offsetHeight - window.innerHeight;
+      const p = Math.max(0,Math.min(1,-rect.top/total));
+      const steps = N+1;
+      const intro = 0.04;
+      const eff = Math.max(0,(p-intro)/(1-intro));
+      const idx = Math.min(steps-1,Math.floor(eff*steps));
+      cards.forEach((c,i)=>{
+        if(idx>=N) c.dataset.state='collapsed';
+        else if(i<idx) c.dataset.state='collapsed';
+        else if(i===idx) c.dataset.state='active';
+        else c.dataset.state='hidden';
+      });
+      if(progFill) progFill.style.width=(p*100).toFixed(1)+'%';
+    }
+    update();
+    window.addEventListener('scroll',update,{passive:true});
+    window.addEventListener('resize',update);
+  })();
+</script>
+</body>
+</html>

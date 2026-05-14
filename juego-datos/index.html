@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>StarsCode — Clasificación Estelar Gaia DR3</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600;1,700&family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@1,700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<img id="bg-gif" src="fondo.gif" alt="" aria-hidden="true">
+<div id="bg-overlay"></div>
+
+<header>
+  <div style="flex:1; display:flex; align-items:center;">
+    <img class="logo" src="logo.png" alt="StarsCode" onerror="this.style.display='none'">
+  </div>
+  <nav>
+    <ul>
+      <li><a href="../que-es/index.html">Qué es StarsCode ›</a></li>
+      <li><a href="../estrellas/index.html">Estrellas ›</a></li>
+      
+    </ul>
+  </nav>
+  <div class="nav-right">
+    <button class="btn-back" onclick="window.location.href='../inicio/index.html'">← Volver al inicio</button>
+    <button class="btn-terminal" onclick="window.location.href='../diagrama-hr/index.html'">
+      <div class="icon-circle">↗</div>Abrir Terminal
+    </button>
+  </div>
+</header>
+
+<div class="hero">
+  <div class="eyebrow">✦ Catálogo Gaia DR3</div>
+  <h2>Clasificación<br>Estelar</h2>
+  <p>Analiza datos astronómicos de estrellas del catálogo Gaia DR3 y construye tu propio dataset de clasificación espectral.</p>
+</div>
+
+<div class="main-panel">
+  <div class="panel">
+
+    <div class="tabs">
+      <button class="tab active" onclick="switchTab('explorar')">Exploración de Estrellas</button>
+      <button class="tab" onclick="switchTab('registro')">Registro de Datos</button>
+    </div>
+
+    <div class="tab-content active" id="tab-explorar">
+      <div class="explore-grid">
+        <div>
+          <div class="instrucciones">
+            1. Presiona <b>Buscar Estrella</b> para cargar una fuente del catálogo Gaia DR3.<br>
+            2. Analiza su temperatura y parámetros.<br>
+            3. Selecciona el color espectral que le corresponde.<br>
+            4. Presiona <b>Registrar</b> para guardar en el dataset.
+          </div>
+          <div class="action-row">
+            <button class="btn" id="observeBtn" disabled>Buscar Estrella</button>
+            <button class="ghost" id="hintBtn" disabled>Pista</button>
+          </div>
+          <div class="timer-line"><div class="timer-bar" id="timerBar"></div></div>
+          <div id="starBox">
+            <p class="star-placeholder">Cargando muestra del catálogo Gaia DR3...</p>
+          </div>
+        </div>
+        <div>
+          <div class="section-label">Determinar Color Estelar</div>
+          <div class="temp-guide">
+            <div class="temp-segment">Roja<span>&lt; 5200 K</span></div>
+            <div class="temp-segment">Amarilla<span>5200–7500 K</span></div>
+            <div class="temp-segment">Blanca<span>7500–10000 K</span></div>
+            <div class="temp-segment">Azul<span>≥ 10000 K</span></div>
+          </div>
+          <div class="choices" id="choices"></div>
+          <div class="action-row">
+            <button class="btn" id="captureBtn" disabled>Registrar</button>
+            <button class="ghost" id="skipBtn" disabled>Ignorar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tab-content" id="tab-registro">
+      <div class="instrucciones" style="margin-bottom:24px;">
+        Aquí se registran automáticamente todas las estrellas que clasifiques. Cada fila muestra el identificador Gaia, la temperatura utilizada, tu clasificación y si fue correcta o no. Cuando termines, ingresa el nombre de tu grupo y descarga el dataset completo en formato <b>CSV</b> para seguir analizándolo en Python.
+      </div>
+      <div class="stats-row">
+        <div class="stat-box"><div class="stat-label">Clasificadas</div><div class="stat-val" id="countTotal">0</div></div>
+        <div class="stat-box"><div class="stat-label">Correctas</div><div class="stat-val" id="countOk" style="color:var(--good)">0</div></div>
+        <div class="stat-box"><div class="stat-label">Incorrectas</div><div class="stat-val" id="countBad" style="color:var(--bad)">0</div></div>
+        <div class="stat-box"><div class="stat-label">Precisión</div><div class="stat-val" id="countPct">—</div></div>
+      </div>
+      <div class="table-wrap">
+        <table id="datasetTable">
+          <thead>
+            <tr>
+              <th>Gaia ID</th><th>Teff Usada</th><th>Clasificación</th><th>Veredicto</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <div class="export-row">
+        <input id="player" placeholder="Nombre del grupo...">
+        <button class="ghost" id="downloadCsv">Exportar CSV</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<footer>StarsCode © 2026 · Proyecto de grado en Astrofísica con Mención en Ciencia de Datos</footer>
+
+<div class="modal" id="modal">
+  <div class="modal-box">
+    <div class="modal-title">Confirmar clasificación</div>
+    <div class="modal-body" id="modalBody"></div>
+    <div class="btn-row">
+      <button class="ghost" id="backBtn">Cancelar</button>
+      <button class="btn" id="saveBtn">Guardar</button>
+    </div>
+  </div>
+</div>
+
+<script src="js/app.js"></script>
+</body>
+</html>

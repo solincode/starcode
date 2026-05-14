@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>StarsCode — Pléyades Gaia DR3</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://aladin.u-strasbg.fr/AladinLite/api/v2/latest/aladin.min.css" />
+  <script src="https://code.jquery.com/jquery-1.12.1.min.js" charset="utf-8"></script>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .aladin-box div[style*="background"],
+    .aladin-box span[style*="background"],
+    .aladin-box div[style*="pink"],
+    .aladin-box div[style*="ffb3d1"],
+    .aladin-box span[style*="ffb3d1"] {
+      color: #000000 !important;
+      font-weight: 700 !important;
+      text-shadow: none !important;
+    }
+    .aladin-box {
+      background: rgba(10, 3, 30, 0.97) !important;
+      border-color: rgba(255, 150, 200, 0.4) !important;
+      color: rgba(220, 200, 255, 0.9) !important;
+      font-family: 'Playfair Display', serif !important;
+    }
+    .aladin-box h3 { color: #ffb3d1 !important; font-family: 'Playfair Display', serif !important; }
+    .aladin-box label { color: rgba(200, 180, 255, 0.85) !important; }
+    .aladin-box select {
+      background: rgba(10, 3, 30, 0.95) !important;
+      color: rgba(220, 200, 255, 0.9) !important;
+      border: 1px solid rgba(255, 150, 200, 0.3) !important;
+      border-radius: 4px !important;
+    }
+    .aladin-box button, .aladin-box input[type=button] {
+      background: rgba(255, 150, 200, 0.15) !important;
+      color: #ffb3d1 !important;
+      border: 1px solid rgba(255, 150, 200, 0.4) !important;
+      border-radius: 6px !important;
+      font-family: 'Playfair Display', serif !important;
+      font-style: italic !important;
+    }
+    .aladin-box input[type=button]:hover, .aladin-box button:hover {
+      background: rgba(255, 150, 200, 0.3) !important;
+    }
+    .aladin-box span[style*="background"],
+    .aladin-box .aladin-catalog-item {
+      color: #1a0030 !important;
+      font-weight: 700 !important;
+    }
+  </style>
+</head>
+
+<body>
+
+  <img id="bg-gif" src="fondo.gif" alt="" aria-hidden="true">
+  <div id="bg-overlay"></div>
+
+  <div id="navbar">
+  <div class="nav-left">
+    <img class="logo" src="logo.png" alt="StarsCode" onerror="this.style.display='none'">
+  </div>
+  <nav>
+    <ul>
+      <li><a href="../que-es/index.html">Qué es StarsCode <span class="nav-chevron">›</span></a></li>
+      <li><a href="../estrellas/index.html">Estrellas <span class="nav-chevron">›</span></a></li>
+      
+    </ul>
+  </nav>
+  <div class="nav-right">
+    <button class="btn-back" onclick="window.location.href='../inicio/index.html'">← Volver al inicio</button>
+    <button class="btn-terminal-nav" onclick="toggleTerminal()">
+      <div class="icon-circle">↗</div>
+      Abrir Terminal
+    </button>
+  </div>
+</div>
+
+  <div id="main-layout">
+
+    <div id="sidebar">
+      <h3>Cúmulo de Pléyades (M45)</h3>
+
+      <p>El Cúmulo de Pléyades, también conocido como M45, son un cúmulo abierto de estrellas jóvenes ubicado en la constelación de Tauro. En esta actividad podrás explorar sus estrellas, observar sus datos y analizarlas usando Python.</p>
+
+      <button id="btn-mision-1" onclick="window.location.href='../diagrama-hr/index.html'">Abrir notebook</button>
+
+      <div style="margin-top: 8px;">
+        <h4>Estrella seleccionada</h4>
+        <div id="object-info">Haz clic en una estrella del mapa para ver sus datos aquí.</div>
+      </div>
+
+      <hr>
+
+      <details>
+        <summary>Ver variables disponibles (Glosario)</summary>
+        <ul style="padding-left: 14px; margin-top: 8px; line-height: 1.7;">
+          <li><b>source_id</b>: ID Gaia DR3</li>
+          <li><b>ra / dec</b>: Coordenadas celestes</li>
+          <li><b>parallax</b>: Paralaje (mas)</li>
+          <li><b>distancia</b>: Distancia estimada (pc)</li>
+          <li><b>pmra / pmdec</b>: Movimiento propio</li>
+          <li><b>mag</b>: Magnitud G (phot_g_mean_mag)</li>
+          <li><b>color</b>: Índice BP-RP (bp_rp)</li>
+          <li><b>temperatura</b>: Temperatura efectiva (K)</li>
+        </ul>
+      </details>
+    </div>
+
+    <div id="aladin-container"></div>
+
+  </div>
+
+  <script src="https://aladin.u-strasbg.fr/AladinLite/api/v2/latest/aladin.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/pyodide/v0.23.4/full/pyodide.js"></script>
+  <script src="js/app.js"></script>
+
+  <div id="terminal-container" class="terminal-closed">
+
+    <div id="terminal-header" onclick="toggleTerminal()">
+      <span id="terminal-arrow">▲</span>
+      <strong>Consola Python</strong>
+      <span id="status-python">Esperando…</span>
+    </div>
+
+    <div id="terminal-body">
+
+      <div id="terminal-help-box">
+        <div class="help-header">
+          <strong>Guía rápida de la consola</strong>
+          <button type="button" onclick="cerrarGuiaConsola()">Cerrar</button>
+        </div>
+        <div id="terminal-intro">Esta es una consola interactiva de Python.
+
+Archivo disponible: pleyades_gaia_dr3.csv
+
+Desde aquí puedes explorar el dataset, revisar sus variables, clasificar estrellas, filtrarlas, graficarlas y construir un diagrama HR.</div>
+      </div>
+
+      <div class="editor-container">
+        <textarea id="python-code" data-default="true"># Consola de análisis en Python
+# Archivo de datos cargado: pleyades_gaia_dr3.csv
+
+# Puedes comenzar revisando las primeras filas:
+print(df.head())
+
+# También puedes revisar las columnas disponibles:
+print(df.columns)
+
+# O contar cuántas estrellas hay:
+print(len(df))</textarea>
+      </div>
+
+      <button id="run-python">RUN CODE</button>
+
+      <div id="python-output">Aquí se mostrarán los resultados de tu código en Python.</div>
+
+    </div>
+  </div>
+
+</body>
+</html>

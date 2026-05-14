@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>StarsCode — ¿Qué es StarsCode?</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600;1,700&family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@1,700&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0a0020;
+    --border: rgba(120, 80, 255, 0.25);
+    --border-bright: rgba(160, 100, 255, 0.7);
+    --accent: #a87fff;
+    --accent-pink: #ffb3d1;
+    --text: #ffffff;
+    --text-soft: rgba(220, 210, 255, 0.85);
+    --text-muted: rgba(180, 160, 255, 0.6);
+    --font-title: 'Playfair Display', serif;
+    --font-heading: 'Cormorant Garamond', serif;
+    --font-body: 'Inter', sans-serif;
+    --radius-lg: 28px;
+    --radius-md: 18px;
+  }
+
+  html, body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-body);
+    -webkit-font-smoothing: antialiased;
+    line-height: 1.5;
+    min-height: 100vh;
+  }
+
+  #navbar {
+    position: sticky; top: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 4px 40px;
+    background: rgba(2, 1, 8, 0.98);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(80, 50, 180, 0.2);
+  }
+
+  #navbar .logo { height: 70px; width: auto; object-fit: contain; }
+
+  #navbar nav ul {
+    display: flex; align-items: center;
+    gap: 28px; list-style: none;
+  }
+
+  #navbar nav ul li {
+    cursor: pointer; font-size: 13px;
+    color: var(--text-soft); font-family: var(--font-body);
+    display: flex; align-items: center; gap: 4px;
+    transition: opacity 0.2s; font-style: italic;
+  }
+
+  #navbar nav ul li:hover { opacity: 0.6; }
+  .nav-chevron { font-size: 11px; color: var(--accent); }
+  .nav-left { flex: 1; display: flex; align-items: center; }
+  .nav-right { flex: 1; display: flex; align-items: center; gap: 12px; justify-content: flex-end; }
+
+  .btn-back {
+    background: transparent; color: var(--text-soft);
+    border: 1px solid rgba(0, 0, 0, 0.4);
+    border-radius: 9999px; padding: 8px 18px;
+    cursor: pointer; font-size: 13px;
+    font-family: var(--font-body); font-style: italic;
+    transition: all 0.2s;
+  }
+  .btn-back:hover {
+    border-color: var(--border-bright);
+    background: rgba(100, 60, 200, 0.2);
+    color: #fff;
+  }
+
+  #bg-gif {
+    position: fixed; inset: 0;
+    width: 100%; height: 100%;
+    object-fit: cover; object-position: center;
+    z-index: 0; opacity: 0.25; pointer-events: none;
+  }
+
+  #bg-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.5);
+  z-index: 1; pointer-events: none;
+}
+
+  .container {
+    position: relative; z-index: 2;
+    width: min(1200px, 92vw);
+    margin: 0 auto;
+  }
+
+  .hero {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    padding: 60px 0 80px;
+  }
+
+  .hero__left {
+    position: relative;
+    background: rgba(80, 40, 160, 0.25);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(168, 127, 255, 0.3);
+    border-radius: var(--radius-lg);
+    padding: 64px 56px;
+    color: #fff;
+    display: flex; flex-direction: column;
+    justify-content: space-between;
+    min-height: 520px; overflow: hidden;
+    box-shadow: inset 0 1px 0 rgba(168,127,255,0.4), 0 8px 32px rgba(0,0,0,0.3);
+  }
+
+  .hero__left::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(168,127,255,0.7), transparent);
+  }
+
+  .hero__title {
+    font-family: var(--font-title);
+    font-size: clamp(38px, 4.5vw, 68px);
+    font-weight: 700; font-style: italic;
+    line-height: 1.05; letter-spacing: -0.02em;
+    background: linear-gradient(135deg, #ffffff 0%, #d4aaff 50%, #a060ff 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 0 30px rgba(160,80,255,0.6));
+  }
+
+  .hero__subtitle {
+    margin-top: 24px; font-size: 17px;
+    line-height: 1.65; color: var(--text-soft);
+    font-style: italic; max-width: 36ch;
+  }
+
+  .hero__cta-row {
+    margin-top: 40px;
+    display: flex; align-items: center; gap: 16px;
+  }
+
+  .btn-pill {
+    background: rgba(120, 60, 220, 0.4);
+    color: #fff;
+    border: 1.5px solid var(--border-bright);
+    border-radius: 9999px; padding: 14px 32px;
+    font-family: var(--font-body); font-weight: 600;
+    font-size: 14px; cursor: pointer; font-style: italic;
+    transition: all 0.2s;
+    box-shadow: 0 0 14px rgba(140,80,255,0.25);
+  }
+  .btn-pill:hover {
+    background: rgba(140, 70, 240, 0.55);
+    box-shadow: 0 0 28px rgba(160,100,255,0.4);
+    transform: translateY(-1px);
+  }
+
+  .scroll-down {
+    width: 48px; height: 48px; border-radius: 9999px;
+    background: transparent;
+    border: 1px solid rgba(168,127,255,0.4);
+    display: grid; place-items: center;
+    color: var(--accent); text-decoration: none;
+    transition: all 0.2s;
+  }
+  .scroll-down:hover { border-color: var(--border-bright); background: rgba(120,60,220,0.2); }
+  .scroll-down svg { width: 20px; height: 20px; }
+
+  .hero__right {
+    position: relative; border-radius: var(--radius-lg);
+    overflow: hidden; min-height: 520px;
+    border: 1px solid rgba(168,127,255,0.2);
+  }
+
+  .hero__image { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+  .floating-icon {
+    position: absolute;
+    width: 88px; height: 88px; border-radius: 16px;
+    background: rgba(20, 8, 55, 0.9);
+    border: 1px solid rgba(168,127,255,0.4);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.4), inset 0 1px 0 rgba(168,127,255,0.3);
+    overflow: hidden; backdrop-filter: blur(12px);
+  }
+  .floating-icon img { width: 100%; height: 100%; object-fit: cover; }
+  .floating-icon--1 { top: 18%; left: 8%; }
+  .floating-icon--2 { top: 8%; right: 12%; }
+  .floating-icon--3 { top: 32%; right: 4%; }
+
+  .modules { padding: 40px 0 60px; }
+
+  .section-title {
+    font-family: var(--font-title);
+    font-size: clamp(38px, 4vw, 60px);
+    font-weight: 700; font-style: italic;
+    background: linear-gradient(135deg, #ffffff 0%, #d4aaff 50%, #a060ff 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    line-height: 1.05; letter-spacing: -0.02em;
+    max-width: 14ch; margin-bottom: 56px;
+    filter: drop-shadow(0 0 20px rgba(160,80,255,0.4));
+  }
+
+  .module-card {
+    position: relative; border-radius: var(--radius-lg);
+    overflow: hidden; margin-bottom: 28px; min-height: 440px;
+    display: grid; grid-template-columns: 1.1fr 1fr;
+    align-items: center;
+    border: 1px solid rgba(168,127,255,0.2);
+    background: rgba(10, 3, 30, 0.7);
+  }
+
+  .module-card__bg {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%;
+    object-fit: cover; z-index: 0; opacity: 0.35;
+  }
+
+  .module-card__panel {
+  position: relative; z-index: 2;
+  background: rgba(40, 15, 80, 0.75);
+  backdrop-filter: blur(20px);
+  border: none;
+  border-radius: var(--radius-md);
+  margin: 32px 0 32px 32px;
+  padding: 36px 40px;
+  max-width: 500px; min-height: 340px;
+  display: flex; flex-direction: column; gap: 18px;
+  box-shadow: none;
+}
+
+.module-card__panel::before {
+  display: none;
+}
+  .module-card__head { display: flex; align-items: center; gap: 16px; }
+
+  .module-card__icon {
+    width: 56px; height: 56px; border-radius: 12px;
+    background: rgba(80,40,160,0.4);
+    border: 1px solid rgba(168,127,255,0.35);
+    overflow: hidden; flex-shrink: 0;
+  }
+  .module-card__icon img { width: 100%; height: 100%; object-fit: cover; }
+
+  .module-card__title {
+    font-family: var(--font-heading);
+    font-size: 26px; font-weight: 700; font-style: italic;
+    color: #fff; line-height: 1.15;
+    text-shadow: 0 0 20px rgba(168,127,255,0.4);
+  }
+
+  .module-card__text {
+    font-size: 14px; line-height: 1.7;
+    color: var(--text-soft); font-family: var(--font-body);
+  }
+
+  .module-card__mac {
+    position: relative; z-index: 2;
+    width: min(440px, 92%); margin: 0 auto;
+    filter: drop-shadow(0 22px 30px rgba(0,0,0,.5));
+  }
+
+  .module-card__mac-screen {
+    position: relative; background: #1d1d1f;
+    border-radius: 14px 14px 6px 6px;
+    padding: 18px 12px 12px;
+    box-shadow: 0 0 0 1px #0a0a0a inset, 0 0 0 2px #3a3a3c inset;
+  }
+
+  .module-card__mac-notch {
+    position: absolute; top: 0; left: 50%;
+    transform: translateX(-50%);
+    width: 90px; height: 14px; background: #1d1d1f;
+    border-radius: 0 0 8px 8px; z-index: 3;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .module-card__mac-notch::after {
+    content: ""; width: 6px; height: 6px; border-radius: 50%;
+    background: #2a2a2c; box-shadow: 0 0 0 1px #111;
+  }
+
+  .module-card__mac-inner {
+    aspect-ratio: 16/10; background: #07041a;
+    overflow: hidden; position: relative; border-radius: 2px;
+    border: 1px solid rgba(168,127,255,0.2);
+  }
+  .module-card__mac-inner img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+  .module-card__mac-base {
+    position: relative; width: 112%; margin-left: -6%;
+    height: 14px;
+    background: linear-gradient(#3a3040 0%, #1a1020 100%);
+    border-radius: 0 0 14px 14px;
+    box-shadow: 0 2px 0 rgba(0,0,0,.3);
+  }
+  .module-card__mac-base::before {
+    content: ""; position: absolute; top: 0; left: 50%;
+    transform: translateX(-50%);
+    width: 30%; height: 5px; background: #2a1840;
+    border-radius: 0 0 8px 8px;
+  }
+  .module-card__mac-base::after {
+    content: ""; position: absolute; bottom: -3px; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(#1a1030, #080318);
+    border-radius: 0 0 16px 16px;
+  }
+
+  .feature {
+    display: grid; grid-template-columns: 1fr 1fr;
+    align-items: center; gap: 60px; padding: 80px 0;
+    border-top: 1px solid rgba(120,80,255,0.15);
+  }
+
+  .feature__title {
+    font-family: var(--font-title);
+    font-size: clamp(34px, 3.5vw, 52px);
+    font-weight: 700; font-style: italic;
+    line-height: 1.05; margin-bottom: 20px;
+    letter-spacing: -0.02em;
+    background: linear-gradient(135deg, #ffffff 0%, #d4aaff 50%, #a060ff 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 0 20px rgba(160,80,255,0.5));
+  }
+
+  .feature__text {
+    font-size: 18px; line-height: 1.65;
+    color: var(--text-soft); max-width: 44ch; font-style: italic;
+  }
+
+  .feature__text--small {
+    font-size: 15px; line-height: 1.65;
+    color: #ffffff; margin-top: 16px; max-width: 50ch;
+  }
+
+  .feature__visual {
+    display: flex; justify-content: center;
+    align-items: center; min-height: 320px;
+  }
+  .feature__visual img { max-width: 100%; max-height: 340px; object-fit: contain; }
+
+  .feature--reverse .feature__copy { order: 2; }
+  .feature--reverse .feature__visual { order: 1; }
+
+  footer {
+    position: relative; z-index: 2;
+    text-align: center; padding: 28px;
+    font-size: 11px; color: rgba(180,160,255,0.25);
+    letter-spacing: 0.05em;
+    border-top: 1px solid var(--border);
+    font-family: var(--font-body);
+  }
+
+ 
+
+  @media (max-width: 900px) {
+    .hero, .module-card, .feature { grid-template-columns: 1fr; }
+    .module-card__panel { margin: 24px; max-width: none; }
+    .module-card__mac { margin: 0 auto 32px; }
+    .hero__left { padding: 40px 28px; min-height: auto; }
+    .hero__right { min-height: 320px; }
+    .feature--reverse .feature__copy { order: 1; }
+    .feature--reverse .feature__visual { order: 2; }
+    #navbar { padding: 4px 20px; }
+    #navbar nav ul { gap: 16px; }
+  }
+</style>
+</head>
+<body>
+
+<img id="bg-gif" src="fondoplataforma.jpeg" alt="" aria-hidden="true">
+<div id="bg-overlay"></div>
+
+<div id="navbar">
+  <div class="nav-left">
+    <img class="logo" src="../inicio/logo.png" alt="StarsCode" onerror="this.style.display='none'">
+  </div>
+  <nav>
+    <ul>
+      
+    </ul>
+  </nav>
+  <div class="nav-right">
+    <button class="btn-back" onclick="window.location.href='../inicio/index.html'">← Volver al inicio</button>
+  </div>
+</div>
+
+<section class="container hero">
+  <div class="hero__left">
+    <div>
+      <h1 class="hero__title">Aprende Data Science a través de la astronomía</h1>
+      <p class="hero__subtitle">
+        Explora, clasifica y visualiza datos astronómicos a través de una plataforma interactiva diseñada para aprender programación con el universo.
+      </p>
+    </div>
+    <div class="hero__cta-row">
+      <button class="btn-pill" type="button" onclick="document.getElementById('modulos').scrollIntoView({behavior:'smooth'})">Explorar módulos</button>
+      <a href="#modulos" class="scroll-down" aria-label="Bajar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="6 9 12 15 18 9"></polyline>
+        </svg>
+      </a>
+    </div>
+  </div>
+
+  <div class="hero__right">
+    <img class="hero__image" src="fotowuan.jpeg" alt="StarsCode"
+         onerror="this.replaceWith(Object.assign(document.createElement('div'),{className:'placeholder',textContent:'IMAGEN HERO\nimg/hero.jpg'}))">
+    <div class="floating-icon floating-icon--1">
+      <img src="sub1.jpeg" alt="Módulo 1"
+           onerror="this.replaceWith(Object.assign(document.createElement('div'),{className:'placeholder',textContent:'ICON 1'}))">
+    </div>
+    <div class="floating-icon floating-icon--2">
+      <img src="sub2.jpeg" alt="Módulo 2"
+           onerror="this.replaceWith(Object.assign(document.createElement('div'),{className:'placeholder',textContent:'ICON 2'}))">
+    </div>
+    <div class="floating-icon floating-icon--3">
+      <img src="sub3.jpeg" alt="Módulo 3"
+           onerror="this.replaceWith(Object.assign(document.createElement('div'),{className:'placeholder',textContent:'ICON 3'}))">
+    </div>
+  </div>
+</section>
+
+<section class="container modules" id="modulos">
+  <h2 class="section-title">Explora nuestros módulos</h2>
+
+  <article class="module-card">
+    
+         
+    <div class="module-card__panel">
+      <div class="module-card__head">
+        <div class="module-card__icon">
+          <img src="sub1.jpeg" alt=""
+               onerror="this.replaceWith(Object.assign(document.createElement('div'),{className:'placeholder',textContent:'ICON'}))">
+        </div>
+        <h3 class="module-card__title">Crea tu propio<br/>Dataset</h3>
+      </div>
+      <p class="module-card__text">
+        Este módulo permite construir un conjunto de datos estelar a partir de reglas de clasificación astronómica. Las y los usuarios pueden trabajar con información de estrellas, aplicar criterios basados en temperatura y color, filtrar resultados y validar etiquetas.
+      </p>
+    </div>
+    <div class="module-card__mac">
+      <div class="module-card__mac-screen">
+        <div class="module-card__mac-notch"></div>
+        <div class="module-card__mac-inner">
+          <img src="dataset.png" alt="Captura módulo"
+               onerror="this.replaceWith(Object.assign(document.createElement('div'),{className:'placeholder',textContent:'CAPTURA APP'}))">
+        </div>
+      </div>
+      <div class="module-card__mac-base"></div>
+    </div>
+  </article>
+
+  <article class="module-card">
+    
+    <div class="module-card__panel">
+      <div class="module-card__head">
+        <div class="module-card__icon">
+          <img src="sub2.jpeg" alt=""
+               onerror="this.replaceWith(Object.assign(document.createElement('div'),{className:'placeholder',textContent:'ICON'}))">
+        </div>
+        <h3 class="module-card__title">StarsLab</h3>
+      </div>
+      <p class="module-card__text">
+        StarsLab permite explorar estrellas del catálogo Gaia sobre un mapa astronómico interactivo. Las y los usuarios pueden observar el cielo, seleccionar estrellas directamente desde el campo estelar y revisar sus propiedades físicas, como posición, color, magnitud, temperatura y distancia.
+      </p>
+    </div>
+    <div class="module-card__mac">
+      <div class="module-card__mac-screen">
+        <div class="module-card__mac-notch"></div>
+        <div class="module-card__mac-inner">
+          <img src="starlab.png" alt="Captura módulo"
+               onerror="this.replaceWith(Object.assign(document.createElement('div'),{className:'placeholder',textContent:'CAPTURA APP'}))">
+        </div>
+      </div>
+      <div class="module-card__mac-base"></div>
+    </div>
+  </article>
+
+  <article class="module-card">
+     
+    <div class="module-card__panel">
+      <div class="module-card__head">
+        <div class="module-card__icon">
+          <img src="sub3.jpeg" alt=""
+               onerror="this.replaceWith(Object.assign(document.createElement('div'),{className:'placeholder',textContent:'ICON'}))">
+        </div>
+        <h3 class="module-card__title">StarsCode Notebook</h3>
+      </div>
+      <p class="module-card__text">
+        StarsCode Notebook permite programar directamente sobre un dataset estelar utilizando Python. Las y los usuarios pueden limpiar datos, trabajar con variables físicas, generar gráficos y construir visualizaciones como el Diagrama HR.
+      </p>
+    </div>
+    <div class="module-card__mac">
+      <div class="module-card__mac-screen">
+        <div class="module-card__mac-notch"></div>
+        <div class="module-card__mac-inner">
+          <img src="notebook.png"Captura módulo"
+               onerror="this.replaceWith(Object.assign(document.createElement('div'),{className:'placeholder',textContent:'CAPTURA APP'}))">
+        </div>
+      </div>
+      <div class="module-card__mac-base"></div>
+    </div>
+  </article>
+</section>
+
+<section class="container feature">
+  <div class="feature__copy">
+    <h2 class="feature__title">Aprendizaje guiado</h2>
+    <p class="feature__text">
+      StarsCode está diseñado para ser utilizado junto a clases y actividades pedagógicas. Cada módulo funciona como una herramienta práctica que acompaña la explicación teórica
+    </p>
+    <p class="feature__text--small">
+      permitiendo que las y los participantes apliquen conceptos de astronomía, ciencia de datos y programación de forma interactiva.
+    </p>
+  </div>
+  <div class="feature__visual">
+    <img src="aprendizaje.jpeg" alt="Ícono 3D cruz"
+         onerror="this.replaceWith(Object.assign(document.createElement('div'),{className:'placeholder',style:'width:260px;height:260px;border-radius:24px;',textContent:'ICONO 3D\nimg/icon-cruz.png'}))">
+  </div>
+</section>
+
+<section class="container feature feature--reverse">
+  <div class="feature__copy">
+    <h2 class="feature__title">Implementación<br/>en taller piloto</h2>
+    <p class="feature__text--small" style="font-size:16px;color:#ffffff;font-style:italic;line-height:1.7;">
+      La plataforma StarsCode fue probada en un taller gratuito desarrollado por AstroGirls, dirigido a niñas y mujeres interesadas en acercarse a la astronomía, la programación y la ciencia de datos.
+    </p>
+  </div>
+  <div class="feature__visual">
+    <img src="taller.png" alt="Ícono 3D hexágono"
+         onerror="this.replaceWith(Object.assign(document.createElement('div'),{className:'placeholder',style:'width:260px;height:260px;border-radius:24px;',textContent:'ICONO 3D\nimg/icon-hexagono.png'}))">
+  </div>
+</section>
+
+<footer>
+  StarsCode © 2026 · Proyecto de grado en Astrofísica con Mención en Ciencia de Datos
+</footer>
+
+</body>
+</html>
